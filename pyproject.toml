@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PacketSpine"
+version = "0.1"
+description = "Utilities for T2 tile<->host serial loop packet comms"
+readme = "README.md"
+requires-python = ">=3.8"
+scripts = { PacketSpine = "PacketSpine:say_hello" }
