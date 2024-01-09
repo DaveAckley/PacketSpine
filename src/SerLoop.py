@@ -22,6 +22,7 @@ class SerLoop:
                 (xpos, ypos, *rest) = args
                 self.tiles.append((idx,xpos,ypos,rest))
                 idx += 1
+        print(idx,"entries in config file",self.configFile)
         tileCount = len(self.tiles)
         print(tileCount, "CONFIG\n","\n ".join([ str(x) for x in self.tiles]))
 
