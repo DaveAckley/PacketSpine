@@ -1,8 +1,15 @@
-{1}  -*-  mode: text; fill-column: 50;  -*-
+{2}  -*-  mode: text; fill-column: 50;  -*-
 [0:
 
 Tue Jan  9 12:56:54 2024 Trying to break out tty
 and packet support code to share between the T2
 tiles and a standalone linux-based host.
+[1:
+
+Tue Jan  9 13:14:14 2024 OK, have added some
+packet-ish files to PacketSpine. Need a stub to
+try it out. But committing first.
+
+:1]
 
 :0]
