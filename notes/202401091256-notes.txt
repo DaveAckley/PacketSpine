@@ -1,0 +1,8 @@
+{1}  -*-  mode: text; fill-column: 50;  -*-
+[0:
+
+Tue Jan  9 12:56:54 2024 Trying to break out tty
+and packet support code to share between the T2
+tiles and a standalone linux-based host.
+
+:0]
