@@ -15,7 +15,7 @@ class Event(ABC):
         cls.classmap[key] = func
 
     @classmethod
-    def makeEvent(cls,sda,list):
+    def makeEvent(cls,mrs,list):
         try:
             action, type, *args = list
         except:
@@ -28,10 +28,10 @@ class Event(ABC):
             print(f"'{type} is not a registered action type, in '{list}'")
             return None
         #print("EVMEV",type,args)
-        return cls.classmap[type](sda,type,*args)
+        return cls.classmap[type](mrs,type,*args)
 
-    def __init__(self,sda,name):
-        self.sda = sda
+    def __init__(self,mrs,name):
+        self.mrs = mrs
         self.name = name
         self.sched = None
         Event.objcount += 1
@@ -51,35 +51,35 @@ class Event(ABC):
         pass
 
     
-class DimScreenEvent(Event):
-    def __init__(self,sda,name):
-        super().__init__(sda,name)
-        self.brightness = -1    # Current brightness unset
-        self.delay = 60*60      # default seconds til dim
+# class DimScreenEvent(Event):
+#     def __init__(self,mrs,name):
+#         super().__init__(mrs,name)
+#         self.brightness = -1    # Current brightness unset
+#         self.delay = 60*60      # default seconds til dim
         
-    def reschedule(self):
-        self.sda.scheduleEvent(self.delay,self) # one hour on
+#     def reschedule(self):
+#         self.mrs.scheduleEvent(self.delay,self) # one hour on
         
-    def wake(self):
-        self.reschedule();
-        self.setBrightnessPercent(30)
+#     def wake(self):
+#         self.reschedule();
+#         self.setBrightnessPercent(30)
 
-    def run(self,eq,now,dead):
-        self.setBrightnessPercent(0)
-        delta = now - dead
-        print(f'{dead} executed at {now} delay {delta}')
-        start = eq.now()
-        n = gc.collect()
-        end = eq.now()
-        gctime = end - start
-        print(f'{n} objects collected in {gctime}')
+#     def run(self,eq,now,dead):
+#         self.setBrightnessPercent(0)
+#         delta = now - dead
+#         print(f'{dead} executed at {now} delay {delta}')
+#         start = eq.now()
+#         n = gc.collect()
+#         end = eq.now()
+#         gctime = end - start
+#         print(f'{n} objects collected in {gctime}')
 
-    def setBrightnessPercent(self,pct):
-        if self.brightness != pct: 
-            print(f'brightness to {pct}')
-            self.brightness = pct
-            decks = self.sda.decks 
-            decks.setAllDecksBrightness(pct)
+#     def setBrightnessPercent(self,pct):
+#         if self.brightness != pct: 
+#             print(f'brightness to {pct}')
+#             self.brightness = pct
+#             decks = self.mrs.decks 
+#             decks.setAllDecksBrightness(pct)
 
 
 class ClockEvent(Event):
@@ -100,9 +100,9 @@ class ThreadEvent(Event):
         worker = self.threadRun
         def catch(eq,now,dead):
             try:
-                #print("LKASLKSDAOAART",self,now)
+                #print("LKASLKDAOAART",self,now)
                 worker(eq,now,dead)
-                #print("FDDDAAANLKASLKSDAOAART",self,now,dead)
+                #print("FDDDAAANLKASLKDAOAART",self,now,dead)
             except Exception as e:
                 print("ZTNDKGOGN",self,e)
         thread = threading.Thread(target=catch,args=(eq,now,dead))
@@ -117,10 +117,10 @@ class SleepEvent(ThreadEvent):
         
 class ShellEvent(ThreadEvent):
 
-    Event.registerSubclass('shell',lambda sda,type,*args: ShellEvent(sda,type,*args))
+    Event.registerSubclass('shell',lambda mrs,type,*args: ShellEvent(mrs,type,*args))
 
-    def __init__(self,sda,name,*args):
-        super().__init__(sda,name)
+    def __init__(self,mrs,name,*args):
+        super().__init__(mrs,name)
         #print(args)
         self.args = args
         
@@ -128,7 +128,7 @@ class ShellEvent(ThreadEvent):
         cmd = self.args[0]
         cmda = cmd.split()
         prog = cmda[0]
-        rprog = self.sda.resolveProgram(prog)
+        rprog = self.mrs.resolveProgram(prog)
         if rprog is None:
             print(f"WARNING: NO EXECUTABLE '{prog}' FOUND; '{cmd}' IGNORED")
             return

@@ -6,8 +6,8 @@ import threading
 import Event
 
 class EventQueue:
-    def __init__(self, sda, name):
-        self.sda = sda
+    def __init__(self, mrs, name):
+        self.mrs = mrs
         self.name = name
         self.pq = asyncio.PriorityQueue()
         self.updateLock = threading.RLock()
@@ -54,8 +54,8 @@ class EventQueue:
             self.wake()
 
     def mainLoop(self):
-        self.dimmer = Event.DimScreenEvent(self.sda,"ScreenDimmer");
-        self.dimmer.reschedule()
+        #self.dimmer = Event.DimScreenEvent(self.mrs,"ScreenDimmer");
+        #self.dimmer.reschedule()
         #clock = Event.ClockEvent(self.sda,"DemoClock");
         #self.runIn(1,clock)
         #sleepy = Event.SleepEvent("DemoThread");
