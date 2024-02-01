@@ -13,41 +13,52 @@ class PacketSpine:
 
         self.nonce = random.randint(1,254)
         self.loopLen = 0    # assume nobody's out there at first
-        self.flagSPacketSeen() # assume the loop's good to start
-        self.flagMPacketSeen() # assume the loop's good to start
+        self.flagIPacketSeen() # assume the loop's good to start
+        self.flagOPacketSeen() # assume the loop's good to start
 
-    def flagSPacketSeen(self):
-        self.sawSPacket = True 
+    def flagIPacketSeen(self):
+        self.sawIPacket = True 
 
-    def flagMPacketSeen(self):
-        self.sawMPacket = True 
+    def flagOPacketSeen(self):
+        self.sawOPacket = True 
         
-    def sendSPacket(self,hops,dest):
-        packetFormat = b'%cW%c%cS0123A123B123C123D123E123F123G123H123I123J123K123L123M123N123O123P'
+    def sendBroadcastPacket(self,payload = b''):
+        packetFormat = b'%c%b'
+        packet = packetFormat % (0x7e, payload)
+        print("BCPACKET",packet)
+        self.sendPacket(packet)
+
+    def sendIPacket(self,hops,dest,payload = b''):
+        packetFormat = b'%cW%c%cI%b'
         packet = packetFormat % (Utils.intToSignedByte(hops),
                                  Utils.intToSignedByte(dest),
-                                 self.nonce)
+                                 self.nonce,
+                                 payload)
+        print("sendIPpacketGOGO",packet)
         self.sendPacket(packet)
         
     def initSM(self): # Buffer up all outbound S packets for a simulation step
-        #if not self.sawSPacket and self.sawMPacket:
+        #if not self.sawIPacket and self.sawOPacket:
         #    self.updateLoopLengthIfNeeded(self.loopLen + 1)
-        self.sawSPacket = False
-        self.sawMPacket = False
+        self.sawIPacket = False
+        self.sawOPacket = False
 
         if self.nonce >= 255:
             self.nonce = 1
         else:
             self.nonce += 1
         print("INNONC",self.nonce)
-        # First send a packet that should come back unhandled
-        self.sendSPacket(self.loopLen,self.loopLen)
+        wr = self.mrs
+        # First send a no-payload packet that should come back unhandled
+        self.sendIPacket(self.loopLen,self.loopLen) 
 
         # Then send loopLen 'real' packets
         for i in range(self.loopLen):
             hops = self.loopLen - i - 1
             dest = hops
-            self.sendSPacket(hops,dest)
+            payload = wr.GetPayloadForTile(dest)
+            self.sendIPacket(hops,dest,payload)
+            #print("PACSPI",payload)
 
     def updateLoopLengthIfNeeded(self,length):
         if length != self.loopLen:

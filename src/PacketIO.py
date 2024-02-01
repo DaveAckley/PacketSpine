@@ -59,7 +59,7 @@ class PacketIO:
             self.bytesin = self.bytesin[pos+1:] # also not including \n
             try:
                 packet = self.deescape(packet) # exception on bad pkt/chksum
-                print("ACCBYTFND",packet)
+                #print("ACCBYTFND",packet)
                 self.pendingin.append(packet)
             except ValueError as v:
                 print("Packet discarded:",v)
