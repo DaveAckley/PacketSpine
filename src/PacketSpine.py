@@ -16,6 +16,12 @@ class PacketSpine:
         self.flagIPacketSeen() # assume the loop's good to start
         self.flagOPacketSeen() # assume the loop's good to start
 
+    def resetStats(self):
+        self.sl.resetStats()
+
+    def getStats(self):
+        return self.sl.getStats()
+    
     def flagIPacketSeen(self):
         self.sawIPacket = True 
 

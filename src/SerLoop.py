@@ -8,8 +8,13 @@ class SerLoop:
         self.tiles = []
 
         self.dispatcher = PacketDispatcher.PacketDispatcher()
-        #self.configFile = configfile
-        #self.loadConfig() # NO CONFIGFILE AT SERLOOP LEVEL
+        self.resetStats()
+
+    def resetStats(self):
+        self.pio.resetStats()
+
+    def getStats(self):
+        return self.pio.getStats()
 
     def registerPacketProcessor(self,pproc):
         return self.dispatcher.registerPacketProcessor(pproc)
