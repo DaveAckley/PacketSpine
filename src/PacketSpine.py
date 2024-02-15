@@ -21,7 +21,10 @@ class PacketSpine:
 
     def getStats(self):
         return self.sl.getStats()
-    
+
+    def getBufferSizes(self):
+        return self.sl.getBufferSizes()
+
     def flagIPacketSeen(self):
         self.sawIPacket = True 
 
@@ -40,7 +43,7 @@ class PacketSpine:
                                  Utils.intToSignedByte(dest),
                                  self.nonce,
                                  payload)
-        print("sendIPpacketGOGO",packet)
+        #print("sendIPpacketGOGO",packet)
         self.sendPacket(packet)
         
     def initSM(self): # Buffer up all outbound S packets for a simulation step
@@ -49,12 +52,13 @@ class PacketSpine:
         self.sawIPacket = False
         self.sawOPacket = False
 
+        wr = self.mrs
+
         if self.nonce >= 255:
             self.nonce = 1
         else:
             self.nonce += 1
         print("INNONC",self.nonce)
-        wr = self.mrs
         # First send a no-payload packet that should come back unhandled
         self.sendIPacket(self.loopLen,self.loopLen) 
 

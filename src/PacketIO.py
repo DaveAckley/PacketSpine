@@ -31,6 +31,11 @@ class PacketIO:
         return (self.countBytesIn,   self.countBytesOut,
                 self.countPacketsIn, self.countPacketsOut)
 
+    def getBufferSizes(self):
+        # pending   bytes to send   packets to handle  unpacketed input bytes 
+        return (len(self.bytesout),len(self.pendingin),len(self.bytesin))
+        #return (self.countBytesOut,self.countPacketsIn,self.countBytesIn)
+
     def close(self):
         self.ser.close();
         self.ser = None

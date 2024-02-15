@@ -16,6 +16,9 @@ class SerLoop:
     def getStats(self):
         return self.pio.getStats()
 
+    def getBufferSizes(self):
+        return self.pio.getBufferSizes()
+
     def registerPacketProcessor(self,pproc):
         return self.dispatcher.registerPacketProcessor(pproc)
 
